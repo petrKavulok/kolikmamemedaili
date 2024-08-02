@@ -1,27 +1,27 @@
 body {
     font-family: Arial, Helvetica, sans-serif;
     background-image: linear-gradient(to bottom, #ffffff, #eedbf7, #efb3e0, #f486b6, #f3567c, #e5426f, #d62a63, #c80057, #aa2076, #7f3688, #4d428a, #11457e);
-height: 100vh;
-position: relative;
-margin: unset
+    min-height: 100vh;
+    position: relative;
+    margin: unset
 }
 
 .container {
-    display: flex; flex-direction: column; margin: auto; width: auto;
-
-
-  margin: 0;
-  position: absolute;
-  top: 45%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+    display: flex; 
+    flex-direction: column; 
+    margin: auto;
+    width: auto;
+    margin: 0;
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .number {
     text-align: center;
     font-size: 150px;
     color: white;
-    /* text-shadow: 4px 4px 4px lightblue; */
 }
 
 .subcontainer h2, .container {
@@ -49,7 +49,7 @@ margin: unset
 .image {
     width: 135px;
     position: absolute;
-    top: 18%;
+    top: 5%;
     left: 50%;
     transform: translate(-50%, 25%);
 }
