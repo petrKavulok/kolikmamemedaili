@@ -2,9 +2,10 @@
 async function fetchMedalData() {
     // const url = 'https://olympics.com/OG2024/data/CIS_MedalNOCs~lang=ENG~comp=OG2024.json';
     const url = 'https://api.olympics.kevle.xyz/medals?country=cze'
+    const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
 
     try {
-        const response = await fetch(url);
+        const response = await fetch(proxyUrl + url);
         if (!response.ok) {
             throw new Error('Network response was not ok ' + response.statusText);
         }
