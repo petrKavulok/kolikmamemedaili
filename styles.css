@@ -23,6 +23,7 @@ body {
     text-align: center;
     font-size: 150px;
     color: white;
+    margin-bottom: 2rem;
 }
 
 .subcontainer h2, .container {
