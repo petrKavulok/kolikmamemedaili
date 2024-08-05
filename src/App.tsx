@@ -4,6 +4,7 @@ import { fetchMedalData } from './utils/fetchData'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { translate } from './utils/translate';
+import { Analytics } from "@vercel/analytics/react"
 
 function App() {
 const [data, setData] = useState<{ medalDisciplines: {gold: string[], silver: string[], bronze: string[]}; globalData: any; }>()
@@ -54,6 +55,7 @@ return (
 			// theme='colored' 
 			position="top-center" 
 		/>
+		<Analytics />
 	</> 
 	
 )
