@@ -5,6 +5,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { translate } from './utils/translate';
 import { Analytics } from "@vercel/analytics/react"
+import { SpeedInsights } from "@vercel/speed-insights/react"
 
 function App() {
 const [data, setData] = useState<{ medalDisciplines: {gold: string[], silver: string[], bronze: string[]}; globalData: any; }>()
@@ -56,6 +57,7 @@ return (
 			position="top-center" 
 		/>
 		<Analytics />
+		<SpeedInsights />
 	</> 
 	
 )
