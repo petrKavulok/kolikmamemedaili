@@ -46,7 +46,7 @@ return (
 
 		</div>
 		<ToastContainer 
-			theme='colored' 
+			// theme='colored' 
 			position="top-center" 
 		/>
 	</> 
