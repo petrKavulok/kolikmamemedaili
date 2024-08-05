@@ -1,6 +1,6 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kolik máme medailí</title>
@@ -16,37 +16,24 @@
     <link href="/favicon.png" rel="icon" sizes="32x32" type="image/png">
     <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png">
     <link rel="stylesheet" href="styles.css" />
-    <script type="application/ld+json">
-        {
-          "@context": "https://schema.org",
-          "@type": "WebPage",
-          "name": "Kolik máme medailí",
-          "description": "Současný stav medailí pro olympijsou výpravu České republiky na LOH v Paříži 2024.",
-          "author": {
-            "@type": "Person",
-            "name": "Petr Kavulok"
-          }
-        }
-    </script>
-
-    <script src="./script.js" ></script>
-</head>
-<body>
+    <link rel="stylesheet" href="modal.css" />
+  </head>
+  <body>
     <!-- https://github.com/petrKavulok/ -->
 
-    <div class="container">
-        <img src="./olympic.png" alt="Olympijské kruhy" class="image" />
-        <h1 id="celkem" class="number"></h1>
-
-        <section class="subcontainer">
-            <article id="zlato">
-            </article>
-            <article id="stribro">
-            </article>
-            <article id="bronz">
-            </article>
-        </section>
-    </div>
-
-</body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "name": "Kolik máme medailí",
+        "description": "Současný stav medailí pro olympijsou výpravu České republiky na LOH v Paříži 2024.",
+        "author": {
+          "@type": "Person",
+          "name": "Petr Kavulok"
+        }
+      }
+  </script>
+  </body>
 </html>
