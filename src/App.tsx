@@ -23,7 +23,12 @@ useEffect(() => {
 	fetcheddata()
 }, [])
 
-const notify = (message: any) => { console.log(translate(message)); toast(translate(message).toString())};
+const notify = (message: any) => {
+	console.log(message)
+	if(message.length > 0) {
+		toast(translate(message).toString())
+	}
+};
 
 return (
 	<>
