@@ -43,7 +43,9 @@ function Medaile({countryCode}: CountryCodeProps) {
     
     return (
         <>
-            {countryCode === 'SVK' && <div className="flag"><img src="SK.png" alt="Slovenská vlajka" /></div>}
+            {countryCode === 'SVK' && <div className="flag">
+                {/* <img src="SK.png" alt="Slovenská vlajka" /> */}
+                </div>}
             <div className={`container ${countryCode === 'SVK' ? 'bratia' : ''}`}>
                 <img src="./olympic.png" alt="Olympijské kruhy" className="image" />
                 
