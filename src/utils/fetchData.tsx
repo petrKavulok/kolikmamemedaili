@@ -14,7 +14,7 @@ export async function fetchData(url: string) {
     }
 }
 
-export async function fetchMedalData(countryCode: string) {
+export async function fetchMedalData(countryCode: 'CZE' | 'SVK') {
     const response = await fetchData('https://olympics.com/OG2024/data/CIS_MedalNOCs~lang=ENG~comp=OG2024.json');
     
     // filter only czech medals regardless of gender

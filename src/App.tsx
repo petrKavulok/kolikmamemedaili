@@ -2,17 +2,16 @@
 import './App.css'
 import 'react-toastify/dist/ReactToastify.css';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
-import My from './My';
-import Bratia from './Bratia';
+import Medaile from './Medaile';
 
 const router = createBrowserRouter([
 	{
 		path: "/",
-		element: <My />,
+		element: <Medaile countryCode='CZE'/>,
 	},
 	{
 		path: "/bratia",
-		element: <Bratia />,
+		element: <Medaile countryCode='SVK' />,
 	},
   ]);
 
