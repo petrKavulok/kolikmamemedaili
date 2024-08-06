@@ -7,13 +7,15 @@ body:has(.bratia) {
     left: 29%;
     top: 50%;
     transform: translate(-50%, -50%);
-    width: 300px,
-    /* width: 50%;
-    height: 100%; */
+    width: 300px;
+    background-image: url('SK.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    height: 300px;
+    filter: blur(20px);
+    -webkit-filter: blur(20px);
 }
 .flag img {
-      filter: blur(20px);
-      -webkit-filter: blur(20px);
     width: 250px;
   }
 
