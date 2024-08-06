@@ -15,6 +15,14 @@ body:has(.bratia) {
     width: 250px;
   }
 
+
+  .link {
+    position: absolute;
+    left: 50%;
+    bottom: 5%;
+    transform: translate(-50%, -50%);
+  }
+
   @media only screen and (max-width: 450px) {
     .flag img {
         width: 175px;

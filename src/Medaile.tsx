@@ -9,6 +9,7 @@ import { SpeedInsights } from "@vercel/speed-insights/react"
 import { Skeleton } from '@mui/material';
 import './index.css';
 import './bratia.css';
+import { Link } from 'react-router-dom';
 
 type CountryCodeProps = {
     countryCode: 'CZE' | 'SVK'
@@ -27,6 +28,8 @@ function Medaile({countryCode}: CountryCodeProps) {
             console.warn(e)
         } 
     } 
+
+    const router = 
     
     useEffect(() => {
         fetchData()
@@ -72,6 +75,16 @@ function Medaile({countryCode}: CountryCodeProps) {
             />
             <Analytics />
             <SpeedInsights />
+
+            <div className='link'>
+            {
+                countryCode === 'SVK' ?
+                
+                <Link style={{color: 'lightgray'}} to='/'>Ako si vedú bratia?</Link>
+                :
+                <Link style={{color: 'lightgray'}} to='/bratia'>Jak jsou na tom bratia?</Link>
+            }
+            </div>
         </>  
     )
     }
