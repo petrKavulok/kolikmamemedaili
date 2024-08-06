@@ -1,6 +1,7 @@
 const sporty = {
     Fencing: 'Šerm',
-    Tennis: 'Tenis'
+    Tennis: 'Tenis',
+    'Canoe Slalom': 'Kayak slalom'
 } as const
 
 export const translate = (sport: any): string[] => {
