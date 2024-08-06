@@ -8,7 +8,7 @@ body:has(.bratia) {
     top: 50%;
     transform: translate(-50%, -50%);
     width: 300px;
-    background-image: url('SK.png');
+    background-image: url('./assets/SK.png');
     background-size: contain;
     background-repeat: no-repeat;
     height: 300px;
