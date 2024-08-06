@@ -1,0 +1,22 @@
+body:has(.bratia) {
+    background: linear-gradient(180deg, rgba(255,255,255,1) 10%, rgba(17,69,126,1) 49%, rgba(215,20,26,1) 84%);
+  }
+
+  .flag {
+    position: absolute;
+    left: 29%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    /* width: 50%;
+    height: 100%; */
+    filter: blur(20px);
+  }
+  .flag img {
+    width: 250px;
+  }
+
+  @media only screen and (max-width: 450px) {
+    .flag img {
+        width: 175px;
+    }
+  }

@@ -14,12 +14,12 @@ export async function fetchData(url: string) {
     }
 }
 
-export async function fetchMedalData() {
+export async function fetchMedalData(countryCode: string) {
     const response = await fetchData('https://olympics.com/OG2024/data/CIS_MedalNOCs~lang=ENG~comp=OG2024.json');
     
     // filter only czech medals regardless of gender
     // @ts-expect-error
-    const filtered = response['medalNOC'].filter(entry => entry.org === 'CZE' && entry.gender === 'TOT')
+    const filtered = response['medalNOC'].filter(entry => entry.org === countryCode && entry.gender === 'TOT')
     
     // reduce specific cports for specific medals for all sports but 'GLO'bal medals
     // @ts-expect-error
