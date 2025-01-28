@@ -1,3 +1,4 @@
+// todo: add more sports
 const sporty = {
     Fencing: 'Šerm',
     Tennis: 'Tenis',
@@ -5,18 +6,12 @@ const sporty = {
     'Canoe Sprint': 'Rychlostní kanoistika'
 } as const
 
-export const translate = (sport: any): string[] => {
-    // @ts-expect-error
-    const arr = []
-    sport.map((el: keyof typeof sporty) => {
-        // console.log(el, sporty[el])
-        if(sporty[el]) {
-            arr.push(sporty[el])
-        } else {
-            arr.push(el)
-        } 
-    })
-    
-    // @ts-expect-error
-    return arr
+type SportKey = keyof typeof sporty;
+
+export const translate = (sports: SportKey[] | string[]): string[] => {
+    if (!Array.isArray(sports)) {
+        return [];
+    }
+
+    return sports.map((sport) => sporty[sport as SportKey] || sport);
 }

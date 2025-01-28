@@ -1,32 +1,52 @@
 import { matchDisciplines, reduceMedals } from "./reduceMedals";
+import { CountryCode, MedalEntry, MedalResponse, ProcessedMedalData } from "./types";
 
-export async function fetchData(url: string) {    
-    try {
-        const response = await fetch(url);
-        if (!response.ok) {
-            throw new Error('Network response was not ok ' + response.statusText);
-        }
-        const data = await response.json();
-        return data
-
-    } catch (error) {
-        console.error('There has been a problem with your fetch operation:', error);
+// Simplified fetch function - let React Query handle the retries and error states
+export async function fetchData<T>(url: string): Promise<T> {    
+    const response = await fetch(url);
+    if (!response.ok) {
+        throw new Error(`Network response was not ok: ${response.statusText}`);
     }
+    return await response.json();
 }
 
-export async function fetchMedalData(countryCode: 'CZE' | 'SVK') {
-    const response = await fetchData('https://olympics.com/OG2024/data/CIS_MedalNOCs~lang=ENG~comp=OG2024.json');
+// Helper functions
+const filterByCountryAndGender = (data: MedalEntry[], countryCode: CountryCode): MedalEntry[] => {
+    return data.filter(entry => entry.org === countryCode && entry.gender === 'TOT');
+};
+
+const separateGlobalData = (data: MedalEntry[]): [MedalEntry[], MedalEntry | null] => {
+    const nonGlobalData = data.filter(el => el.sport !== 'GLO');
+    const globalData = data.find(el => el.sport === 'GLO') || null;
+    return [nonGlobalData, globalData];
+};
+
+// Simplified medal data fetching function
+export async function fetchMedalData(countryCode: CountryCode): Promise<ProcessedMedalData> {
+    const response = await fetchData<MedalResponse>(
+        'https://olympics.com/OG2024/data/CIS_MedalNOCs~lang=ENG~comp=OG2024.json'
+    );
+
+    const filteredByCountry = filterByCountryAndGender(response.medalNOC, countryCode);
+    const [nonGlobalData, globalData] = separateGlobalData(filteredByCountry);
     
-    // filter only czech medals regardless of gender
-    // @ts-expect-error
-    const filtered = response['medalNOC'].filter(entry => entry.org === countryCode && entry.gender === 'TOT')
-    
-    // reduce specific cports for specific medals for all sports but 'GLO'bal medals
-    // @ts-expect-error
-    const categorizedMedals = reduceMedals(filtered.filter(el => el.sport !== 'GLO'))
-    
-    const medalDisciplines = await matchDisciplines(categorizedMedals)
-    
-    // @ts-expect-error
-    return {medalDisciplines, globalData: filtered.filter(el => el.sport === 'GLO')[0]}
+    const categorizedMedals = reduceMedals(nonGlobalData);
+    const medalDisciplines = await matchDisciplines(categorizedMedals) || {
+        gold: [],
+        silver: [],
+        bronze: []
+    };
+
+    // Transform globalData to ensure it matches the expected type
+    const formattedGlobalData = {
+        total: globalData?.total || 0,
+        gold: globalData?.gold || 0,
+        silver: globalData?.silver || 0,
+        bronze: globalData?.bronze || 0
+    };
+
+    return {
+        medalDisciplines,
+        globalData: formattedGlobalData
+    };
 }
