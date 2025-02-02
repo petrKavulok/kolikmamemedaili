@@ -19,6 +19,8 @@ function Medaile({countryCode}: CountryCodeProps) {
     const notify = (message: string[]) => {
         if (message?.length > 0) {
             toast(translate(message).toString())
+        } else {
+            toast('Zatím nic :/')
         }
     }
     
