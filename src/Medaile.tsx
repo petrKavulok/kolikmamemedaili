@@ -18,28 +18,18 @@ type CountryCodeProps = {
 function Medaile({countryCode}: CountryCodeProps) {
     const [data, setData] = useState<{ medalDisciplines: {gold: string[], silver: string[], bronze: string[]}; globalData: any; }>()
     
-    const fetchData = async () => {
-        try {
-            const response = await fetchMedalData(countryCode)
-    
-            // @ts-expect-error
-            setData(response)
-        } catch (e) {
-            console.warn(e)
-        } 
-    } 
-
-    const router = 
-    
-    useEffect(() => {
-        fetchData()
-    }, [])
-    
-    const notify = (message: any) => {
-        if(message.length > 0) {
+    const notify = (message: string[]) => {
+        console.log(message)
+        if (message?.length > 0) {
             toast(translate(message).toString())
+        } else {
+            toast('Zatím nic :/')
         }
-    };
+    }
+    
+    // if (error) {
+    //     return <div>Failed to load medal data</div>
+    // }
     
     return (
         <>
