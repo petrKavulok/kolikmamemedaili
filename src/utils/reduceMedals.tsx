@@ -1,31 +1,36 @@
 import { fetchData } from "./fetchData";
+import { MedalEntry, MedalTally, DisciplineResponse, SportCodeMapping } from "./types";
 
-// @ts-expect-error
-export function reduceMedals(data): {gold: string[], silver: string[], bronze: string[]} {
-  // @ts-expect-error
-    const medalsObject = data.reduce((acc, curr) => {
-        if (curr.gold > 0) {
+export function reduceMedals(data: MedalEntry[]): MedalTally {
+    const medalsObject = data.reduce<MedalTally>((acc, curr) => {
+        if (curr.gold && curr.gold > 0) {
           acc.gold.push(curr.sport);
         }
-        if (curr.silver > 0) {
+        if (curr.silver && curr.silver > 0) {
           acc.silver.push(curr.sport);
         }
-        if (curr.bronze > 0) {
+        if (curr.bronze && curr.bronze > 0) {
           acc.bronze.push(curr.sport);
         }
         return acc;
       }, { gold: [], silver: [], bronze: [] });
     
-    return medalsObject
+    return medalsObject;
 }
 
-// @ts-expect-error
-export async function matchDisciplines(data) {
-  const response = await fetchData('https://olympics.com/OG2024/data/GLO_Disciplines~comp=OG2024~lang=ENG.json');
+interface Discipline {
+  code: string;
+  description: string;
+  isSport: boolean;
+}
+
+export async function matchDisciplines(data: MedalTally): Promise<MedalTally> {
+  const response = await fetchData<DisciplineResponse>(
+    'https://olympics.com/OG2024/data/GLO_Disciplines~comp=OG2024~lang=ENG.json'
+  );
   
   // Create a mapping of sport codes to their descriptions
-  // @ts-expect-error
-  const sportCodeToDescription = response.disciplines.reduce((acc, discipline) => {
+  const sportCodeToDescription = response.disciplines.reduce<SportCodeMapping>((acc, discipline) => {
     if (discipline.isSport) {
       acc[discipline.code] = discipline.description;
     }
@@ -33,16 +38,14 @@ export async function matchDisciplines(data) {
   }, {});
   
   // Transform the medals object
-  // @ts-expect-error
-  const transformMedalsObject = (medalsObj, codeToDesc) => {
-    return Object.keys(medalsObj).reduce((acc, medalType) => {
-          // @ts-expect-error
+  const transformMedalsObject = (medalsObj: MedalTally, codeToDesc: SportCodeMapping): MedalTally => {
+    return (Object.keys(medalsObj) as Array<keyof MedalTally>).reduce<MedalTally>((acc, medalType) => {
         acc[medalType] = medalsObj[medalType].map(code => codeToDesc[code] || code);
         return acc;
-        }, {});
-    };
+    }, { gold: [], silver: [], bronze: [] });
+  };
     
-    const transformedMedalsObject = transformMedalsObject(data, sportCodeToDescription);
+  const transformedMedalsObject = transformMedalsObject(data, sportCodeToDescription);
     
-    return transformedMedalsObject
+  return transformedMedalsObject;
 }

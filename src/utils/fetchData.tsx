@@ -1,17 +1,13 @@
 import { matchDisciplines, reduceMedals } from "./reduceMedals";
+import { CountryCode, MedalEntry, MedalResponse, ProcessedMedalData } from "./types";
 
-export async function fetchData(url: string) {    
-    try {
-        const response = await fetch(url);
-        if (!response.ok) {
-            throw new Error('Network response was not ok ' + response.statusText);
-        }
-        const data = await response.json();
-        return data
-
-    } catch (error) {
-        console.error('There has been a problem with your fetch operation:', error);
+// Simplified fetch function - let React Query handle the retries and error states
+export async function fetchData<T>(url: string): Promise<T> {    
+    const response = await fetch(url);
+    if (!response.ok) {
+        throw new Error(`Network response was not ok: ${response.statusText}`);
     }
+    return await response.json();
 }
 
 // Helper functions
