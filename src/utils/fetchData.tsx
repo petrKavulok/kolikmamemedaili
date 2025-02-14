@@ -1,7 +1,7 @@
-import { matchDisciplines, reduceMedals } from "./reduceMedals";
-import { CountryCode, MedalEntry, MedalResponse, ProcessedMedalData } from "./types";
+import { reduceMedals } from "./reduceMedals";
+import { CountryCode, MedalEntry, MedalTally, ProcessedMedalData } from "./types";
 
-// Simplified fetch function - let React Query handle the retries and error states
+
 export async function fetchData<T>(url: string): Promise<T> {    
     const response = await fetch(url);
     if (!response.ok) {
@@ -11,75 +11,57 @@ export async function fetchData<T>(url: string): Promise<T> {
 }
 
 // Helper functions
-const filterByCountryAndGender = (data: MedalEntry[], countryCode: CountryCode): MedalEntry[] => {
-    return data.filter(entry => entry.org === countryCode && entry.gender === 'TOT');
+const filterByCountry = (data: MedalEntry[], countryCode: CountryCode): MedalEntry[] => {
+    return data.filter(entry => 
+        entry.country_code === countryCode
+    );
 };
 
-const separateGlobalData = (data: MedalEntry[]): [MedalEntry[], MedalEntry | null] => {
-    const nonGlobalData = data.filter(el => el.sport !== 'GLO');
-    const globalData = data.find(el => el.sport === 'GLO') || null;
-    return [nonGlobalData, globalData];
+const processMedalData = (entries: MedalEntry[]): MedalEntry[] => {
+    return entries.map(entry => ({
+        ...entry,
+        sport: entry.code_discipline,
+        gold: entry.medal_type === 'Gold Medal' ? 1 : 0,
+        silver: entry.medal_type === 'Silver Medal' ? 1 : 0,
+        bronze: entry.medal_type === 'Bronze Medal' ? 1 : 0
+    }));
 };
 
-// Is hardcoded due to API not working
-const formattedGlobalData = {
-    CZE: {
-        total: 5,
-        gold: 3,
-        silver: 0,
-        bronze: 2
-    },
-    SVK: {
-        total: 1,
+const calculateGlobalData = (entries: MedalEntry[]) => {
+    return entries.reduce((acc, entry) => ({
+        total: acc.total + 1,
+        gold: acc.gold + (entry.medal_type === 'Gold Medal' ? 1 : 0),
+        silver: acc.silver + (entry.medal_type === 'Silver Medal' ? 1 : 0),
+        bronze: acc.bronze + (entry.medal_type === 'Bronze Medal' ? 1 : 0)
+    }), {
+        total: 0,
         gold: 0,
         silver: 0,
-        bronze: 1
-    },
-}
-
-const medalDisciplines = {
-    CZE: {
-        gold: ['Tenis (smíšená čtyřhra)', 'Rychlostní kanoistika (C1 1000m)', 'Rychlostní kanoistika (K1 1000m)'],
-        silver: [],
-        bronze: ['Šerm (tým kord)', 'Atletika (hod oštěpem)']
-    },
-    SVK: {
-        gold: [],
-        silver: [],
-        bronze: ['Kanoistika']
-    }
-}
+        bronze: 0
+    });
+};
 
 // Simplified medal data fetching function
-export async function fetchMedalData(countryCode: CountryCode): Promise<ProcessedMedalData> {
+export async function fetchMedalData(countryCode: CountryCode): Promise<ProcessedMedalData | undefined> {
+    try {
+        const response = await fetchData<MedalEntry[]>(
+            'https://data.education.gouv.fr/api/explore/v2.1/catalog/datasets/paris-2024-results-medals-oly-eng/exports/json'
+        );
 
-    // API stopped working
-    // TODO: find a new source
+        const filteredByCountry = filterByCountry(response, countryCode);
 
-    // const response = await fetchData<MedalResponse>(
-    //     'https://olympics.com/OG2024/data/CIS_MedalNOCs~lang=ENG~comp=OG2024.json'
-    // );
+        const processedEntries = processMedalData(filteredByCountry);
 
-    // const filteredByCountry = filterByCountryAndGender(response.medalNOC, countryCode);
-    // const [nonGlobalData, globalData] = separateGlobalData(filteredByCountry);
-    
-    // const categorizedMedals = reduceMedals(nonGlobalData);
-    // const medalDisciplines = await matchDisciplines(categorizedMedals) || {
-    //     gold: [],
-    //     silver: [],
-    //     bronze: []
-    // };
+        const categorizedMedals = reduceMedals(processedEntries);
 
-    // // Transform globalData to ensure it matches the expected type
-    // const formattedGlobalData = {
-    //     total: globalData?.total || 0,
-    //     gold: globalData?.gold || 0,
-    //     silver: globalData?.silver || 0,
-    //     bronze: globalData?.bronze || 0
-    // };
+        const globalData = calculateGlobalData(processedEntries);
 
-    return {
-        medalDisciplines: medalDisciplines[countryCode],
-        globalData: formattedGlobalData[countryCode]
-    };
+
+        return {
+            categorizedMedals,
+            globalData
+        };
+    } catch (error) {
+        console.error('Error fetching medal data:', error);
+    }
 }
