@@ -1,24 +1,31 @@
 export type CountryCode = 'CZE' | 'SVK';
 
 export interface MedalEntry {
-  org: string;
+  code_discipline: string;
+  country: string;
+  country_code: string;
+  discipline: string;
+  event: string;
   gender: string;
-  sport: string;
-  gold?: number;
-  silver?: number;
-  bronze?: number;
-  [key: string]: any; // for other properties that might exist
+  medal_code: number;
+  medal_date: string;
+  medal_type: string;
+  name: string;
+  url_event: string;
 }
 
-export interface MedalResponse {
-  medalNOC: MedalEntry[];
+// Added interfaces from reduceMedals.tsx
+export interface MedalTally {
+  gold: MedalEntry[];
+  silver: MedalEntry[];
+  bronze: MedalEntry[];
 }
 
 export interface ProcessedMedalData {
-  medalDisciplines: {
-    gold: string[]
-    silver: string[]
-    bronze: string[]
+  categorizedMedals: {
+    gold: MedalEntry[]
+    silver: MedalEntry[]
+    bronze: MedalEntry[]
   }
   globalData: {
     total: number
@@ -27,24 +34,3 @@ export interface ProcessedMedalData {
     bronze: number
   }
 }
-
-// Added interfaces from reduceMedals.tsx
-export interface MedalTally {
-  gold: string[];
-  silver: string[];
-  bronze: string[];
-}
-
-export interface Discipline {
-  code: string;
-  description: string;
-  isSport: boolean;
-}
-
-export interface DisciplineResponse {
-  disciplines: Discipline[];
-}
-
-export interface SportCodeMapping {
-  [key: string]: string;
-} 
