@@ -8,6 +8,7 @@ import { Link } from 'react-router-dom'
 import { useMedalData } from './hooks/useMedalData'
 import './index.css'
 import './bratia.css'
+import type { MedalEntry } from './utils/types'
 
 type CountryCodeProps = {
     countryCode: 'CZE' | 'SVK'
@@ -16,14 +17,20 @@ type CountryCodeProps = {
 function Medaile({countryCode}: CountryCodeProps) {
     const { data, isLoading, error } = useMedalData(countryCode)
     
-    const notify = (message: string[]) => {
-        if (message?.length > 0) {
-            toast(translate(message).toString())
-        } else {
+    const notify = (message: MedalEntry[]) => {
+        if (!message?.length) {
             toast('Zatím nic :/')
+            return
         }
+
+        const formattedMessage = message
+            .map((medal: MedalEntry) => `${medal.discipline}, ${medal.event}, ${medal.name}`)
+
+        //  TODO: add translating
+        toast(formattedMessage)
     }
     
+    console.log({data})
     if (error) {
         return <div>Failed to load medal data</div>
     }
@@ -36,13 +43,13 @@ function Medaile({countryCode}: CountryCodeProps) {
                 
                 <h1 id="celkem" className="number">
                     {isLoading || !data?.globalData?.total ? 
-                        <Skeleton variant="rounded" width={150} style={{marginTop: '1rem'}}/> : 
+                        <Skeleton  variant="rounded" width={150} style={{marginTop: '1rem'}}/> : 
                         data.globalData.total
                     }
                 </h1>
     
                 <section className="subcontainer">
-                    <article id="gold" onClick={() => notify(data?.medalDisciplines.gold || [])}>
+                    <article id="gold" onClick={() => notify(data?.categorizedMedals.gold || [])}>
                         <h2 style={{display: 'flex'}}>
                             🥇 {isLoading || !data?.globalData ? 
                                 <Skeleton style={{display: 'inline-block'}} variant='rounded' width={50}/> : 
@@ -50,7 +57,7 @@ function Medaile({countryCode}: CountryCodeProps) {
                             }
                         </h2>
                     </article>
-                    <article id="silver" onClick={() => notify(data?.medalDisciplines.silver || [])}>
+                    <article id="silver" onClick={() => notify(data?.categorizedMedals.silver || [])}>
                         <h2 style={{display: 'flex'}}>
                             🥈 {isLoading || !data?.globalData ? 
                                 <Skeleton style={{display: 'inline-block'}} variant='rounded' width={50}/> : 
@@ -58,7 +65,7 @@ function Medaile({countryCode}: CountryCodeProps) {
                             }
                         </h2>
                     </article>
-                    <article id="bronze" onClick={() => notify(data?.medalDisciplines.bronze || [])}>
+                    <article id="bronze" onClick={() => notify(data?.categorizedMedals.bronze || [])}>
                         <h2 style={{display: 'flex'}}>
                             🥉 {isLoading || !data?.globalData ? 
                                 <Skeleton style={{display: 'inline-block'}} variant='rounded' width={50}/> : 
@@ -79,7 +86,7 @@ function Medaile({countryCode}: CountryCodeProps) {
                     <Link style={{color: 'lightgray'}} to='/bratia'>Jak jsou na tom bratia?</Link>
                 }
             </div>
-        </>  
+        </>
     )
 }
 
